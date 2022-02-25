@@ -26,7 +26,7 @@ module.exports = () => {
       }
 
       if (decl.prop === 'grid-template-columns') {
-        const match = /repeat\((\d),\s*1fr\)/.exec(decl.value);
+        const match = /repeat\((\d+),\s*1fr\)/.exec(decl.value);
 
         if (match != null) {
           const rule = decl.parent;
