@@ -64,6 +64,38 @@ module.exports = () => {
           rule.after(allChildrenRule);
         }
       }
+
+      if (decl.prop === 'gap') {
+        const unitsMatch = /([+-]?([0-9]*[.])?[0-9]+)(\w{2,3})/.exec(decl.value);
+
+        if (unitsMatch != null) {
+          const rule = decl.parent;
+          const gapAmount = unitsMatch[1];
+          const gapUnit = unitsMatch[3];
+          const margin = `${gapAmount / 2}${gapUnit}`;
+
+          const childrenRule = rule.root().nodes.find(({ type, selector }) => type === 'rule' && selector.startsWith(`${rule.selector} `));
+
+          if (childrenRule) {
+            const declarations = childrenRule.nodes.filter(({ type, prop }) => type === 'decl' && (prop === 'height' || prop === 'width'));
+
+            declarations.forEach(declaration => {
+              const unitsMatch = /([+-]?([0-9]*[.])?[0-9]+)(\w{2,3})/.exec(declaration.value);
+              if (!unitsMatch) return declaration.value = `calc(${declaration.value} - ${gapAmount}${gapUnit})`;
+              if (unitsMatch[1] > gapAmount) declaration.value = `calc(${unitsMatch[0]} - ${gapAmount}${gapUnit})`;
+            });
+          }
+
+          const allChildrenRule = new Rule({
+            selector: `${decl.parent.selector} > *`
+          });
+
+          allChildrenRule.push(new Declaration({ prop: 'margin', value: margin }));
+
+          rule.after(allChildrenRule);
+          decl.remove();
+        }
+      }
     }
   }
 }

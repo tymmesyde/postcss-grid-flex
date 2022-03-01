@@ -22,3 +22,7 @@ it('should convert grid-template-columns', async () => {
 it('should convert grid-gap', async () => {
   await run('a{grid-gap: 0.5rem;}a>*{width: 25%;}', 'a{grid-gap: 0.5rem;margin-left: -1rem;}a > *{margin-left: 1rem;margin-bottom: 1rem;}a>*{width: 25%;}', { })
 })
+
+it('should convert gap', async () => {
+  await run('a{gap: 3em;}a b{height: 3em;width: 9rem;}', 'a{}a > *{margin: 1.5em;}a b{height: 3em;width: calc(9rem - 3em);}', { })
+})
