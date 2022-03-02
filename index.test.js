@@ -26,3 +26,11 @@ it('should convert grid-gap', async () => {
 it('should convert gap', async () => {
   await run('a{gap: 3em;}a b{height: 3em;width: 9rem;}', 'a{}a > *{margin: 1.5em;}a b{height: 3em;width: calc(9rem - 3em);}', { })
 })
+
+it('should convert aspect-ratio', async () => {
+  await run('a{height:calc(26em - 2.5em);aspect-ratio: 16/9;}', 'a{height:calc(26em - 2.5em);width:calc((26em - 2.5em) * (16/9));}', { })
+})
+
+it('should convert aspect-ratio on siblings class', async () => {
+  await run('a{height:calc(26em - 2.5em);}a.ok{aspect-ratio: 16/9;}', 'a{height:calc(26em - 2.5em);}a.ok{width:calc((26em - 2.5em) * (16/9));}', { })
+})
