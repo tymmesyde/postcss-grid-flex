@@ -104,6 +104,21 @@ module.exports = () => {
         if (parentRuleHeightDeclaration) {
           parentRule.push(new Declaration({ prop: 'width', value: `calc(${parentRuleHeightDeclaration.value.replace('calc', '')} * (${decl.value}))` }));
           decl.remove();
+        } else {
+          const splittedSelector = parentRule.selector.split('.');
+          const parentRuleSelector = splittedSelector.splice(0, splittedSelector.length - 1).join('.');
+          const sameSelectorRules = parentRule.root().nodes.filter(({ type, selector }) => type === 'rule' && selector.startsWith(`${parentRuleSelector}`));
+
+          if (sameSelectorRules.length) {
+            sameSelectorRules.forEach(rule => {
+              const declarations = rule.nodes.filter(({ type, prop }) => type === 'decl' && prop === 'height');
+
+              declarations.forEach(declaration => {
+                parentRule.push(new Declaration({ prop: 'width', value: `calc(${declaration.value.replace('calc', '')} * (${decl.value}))` }));
+                decl.remove();
+              });
+            })
+          }
         }
       }
     }

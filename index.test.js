@@ -30,3 +30,7 @@ it('should convert gap', async () => {
 it('should convert aspect-ratio', async () => {
   await run('a{height:calc(26em - 2.5em);aspect-ratio: 16/9;}', 'a{height:calc(26em - 2.5em);width:calc((26em - 2.5em) * (16/9));}', { })
 })
+
+it('should convert aspect-ratio on siblings class', async () => {
+  await run('a{height:calc(26em - 2.5em);}a.ok{aspect-ratio: 16/9;}', 'a{height:calc(26em - 2.5em);}a.ok{width:calc((26em - 2.5em) * (16/9));}', { })
+})
