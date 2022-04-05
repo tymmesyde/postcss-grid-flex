@@ -107,7 +107,7 @@ module.exports = () => {
         } else {
           const splittedSelector = parentRule.selector.split('.');
           const parentRuleSelector = splittedSelector.splice(0, splittedSelector.length - 1).join('.');
-          const sameSelectorRules = parentRule.root().nodes.filter(({ type, selector }) => type === 'rule' && selector.startsWith(`${parentRuleSelector}`));
+          const sameSelectorRules = parentRule.root().nodes.filter(({ type, selector }) => type === 'rule' && selector === parentRuleSelector);
 
           if (sameSelectorRules.length) {
             sameSelectorRules.forEach(rule => {
